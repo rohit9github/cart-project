@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+
+    .header {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .search-container {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px;
+    }
+
+    #search {
+        width: 70%;
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .btn {
+        width: 20%;
+        padding: 8px;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: 500;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+    }
+
+    #view {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin: 20px;
+    }
+
+    .product {
+        background-color: #fff;
+        padding: 12px;
+        margin: 15px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 250px;
+        text-align: center;
+    }
+    .product img {
+        width: 170px;
+        height: 220px;
+        object-fit: cover;
+    }
+
+    .product h2 {
+        margin-top: 10px;
+        color: #333;
+    }
+
+    .product p {
+        color: #555;
+    }
+
+    .product button {
+        background-color: #4caf50;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        width: 80%;
+        margin-top: 10px;
+    }
+
+    .product button:hover {
+        background-color: #45a049;
+    }
+
+    #countcart {
+        position: fixed;
+        width: 65px;
+        height: 65px;
+        line-height: 65px;
+        top: 0;
+        right: 10px;
+        background-color: #4caf50;
+        color: #fff;
+        border-radius: 50%;
+        font-size: 18px;
+    }
+</style>
+</head>
+<body>
+ <div class="header">
+  <h2>Product List</h2>
+  <a href="cart.html" target="_blank">
+    <h1 id="countcart">Cart(0)</h1>
+  </a>
+</div>
+<div class="search-container">
+  <input type="text" id="search" placeholder="Serch By Name OR Price" />
+  <input type="button" onclick="return searching()" placeholder="Enter char and digit" class="btn" value="Serch">
+</div>
+  
+  <div id="view"></div>
+  
+  
+  <script>
+  
+  
+    var oldcat1 = JSON.parse(localStorage.getItem('cartdata')) || [];
+    document.getElementById("countcart").innerHTML = oldcat1 == null ? "cart(0)" : `cart(${oldcat1.length})`;
+  
+    var product = JSON.parse(localStorage.getItem('product'));
+  
+    var list = `<div style = "display : flex; flex-wrap: wrap;">`;
+    product.forEach((v, i) => {
+      list += `<div style = "margin-left : 15px" class="product">`;
+      list += `<img src="img/${v.imgname}">`;
+      list += `<h2>Product : ${v.name}</h2>`;
+      list += `<p>Price : ${v.price},<span>Old-price :${v.oldpr}</span></p>`;
+      list += `<p>Decs : ${v.decs}</p>`;
+      list += `<p>Aailable-Stock : ${v.stock}</p>`;
+      list += `<button onclick="return addcart(${v.id})">ADD Cart</button>`;
+      list += `</div>`;
+    });
+  
+    list += `</div>`;
+    document.getElementById("view").innerHTML = list;
+  
+  
+    var cart = [];
+  
+    function addcart(id) {
+  
+      var oldcart = JSON.parse(localStorage.getItem('cartdata')) || [];
+  
+      var index = oldcart.findIndex((v, i) => v.id == id);
+  
+      if (index != -1) {
+  
+        alert("this product is already in cart");
+  
+      } else {
+  
+        product.forEach((v, i) => {
+  
+          if (id == v.id) {
+            delete (v.oldpr);
+            delete (v.decs);
+            delete (v.stock);
+            v.qunatity = 1;
+            cart.push(v);
+          }
+  
+        });
+  
+        document.getElementById("countcart").innerHTML = `cart(${cart.length})`;
+        localStorage.setItem('cartdata', JSON.stringify(cart));
+      }
+  
+    }
+  
+    function searching() {
+      var se = document.getElementById('search').value;
+      let prosearch = product.filter((v, i) => {
+        if (v.name.match(se) || v.price.match(se)) {
+          return v;
+      
+        // else {
+        //   console.log(v);
+        // }
+        
+        }
+        })
+        var list = `<div style = "display : flex; flex-wrap: wrap;">`;
+          prosearch.forEach((v, i) => {
+            list += `<div style = "margin-left : 15px" class="product">`;
+            list += `<img src="img/${v.imgname}" height = '100'>`;
+            list += `<h2>${v.name}</h2>`;
+            list += `<p>${v.price},<span>${v.oldpr}</p>`;
+            list += `<p>${v.decs}</p>`;
+            list += `<p>${v.stock}</p>`;
+            list += `<button onclick="return addcart(${v.id})">ADD Cart</button>`;
+            list += `</div>`;
+          });
+  
+          list += `</div>`;
+          document.getElementById("view").innerHTML = list;
+  
+    }
+  
+  
+  
+  </script>
+  
+</body>
+</html>
+

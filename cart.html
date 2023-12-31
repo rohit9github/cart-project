@@ -1,0 +1,116 @@
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    td img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    td, th, tr {
+        border: 1px solid #dddddd;
+    }
+
+    td button {
+        padding: 5px 10px;
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    td button:hover {
+        background-color: #c82333;
+    }
+
+    td input {
+        width: 40px;
+        text-align: center;
+    }
+
+    td#final {
+        font-weight: bold;
+    }
+</style>
+
+
+<h1>Cart page</h1>
+<div id="view"></div>
+<script>
+
+    var cartitem = JSON.parse(localStorage.getItem("cartdata"));
+
+    viewcart();
+
+    function viewcart(){
+        var cartitem = JSON.parse(localStorage.getItem("cartdata"));
+        var cartrecord = `<table border = "1" padding ="10pc"><tr><td>No</td><td>IMG</td><td>Name</td><td>Price</td><td>Quantity</td><td>Total</td><td>Delete</td>`;
+
+            var final_total=0;
+            cartitem.map((v,i)=>{
+
+                cartrecord += `<tr>`;
+                cartrecord += `<td>${++i}</td>`;
+                cartrecord += `<td><img src="img/${v.imgname}" height = '80' width="80"></td>`;
+                cartrecord += `<td>${v.name}</td>`;
+                cartrecord += `<td id="price${i}">${v.price}</td>`;
+                cartrecord += `<td><input type="number" id="quantity${i}" min="1" max="5" value="${v.qunatity}" onchange=" quantitychange(${i})"></td>`;
+                var sum = v.price*v.qunatity;
+                final_total += sum;
+                cartrecord += `<td id=total${i}>${sum}</td>`;
+                cartrecord += `<td><button onclick="return deletedata(${v.id})">Delete</button</td>`;
+                cartrecord += `</tr>`;
+            });
+            cartrecord += `<tr><td colspan=5 align=right>Total : </td><td colspan=2 id="final"></td></tr>`;
+            cartrecord += `</table>`;
+
+            document.getElementById("view").innerHTML = cartrecord;     
+           document.getElementById("final").innerHTML=final_total; 
+
+
+    }
+
+    function quantitychange(pos){
+
+        var q = parseInt(document.getElementById('quantity'+pos).value);
+        var pr = parseInt(document.getElementById('price'+pos).innerHTML);
+
+        var total = q*pr;
+
+        document.getElementById("total"+pos).innerHTML=total;
+
+        var final_total=0;
+
+        var cartitem=JSON.parse(localStorage.getItem('cartdata'));z
+
+        for(var i = 1; i < cartitem.length+1 ;i++){
+
+            var sum1 = parseInt(document.getElementById("total"+i).innerHTML);
+            final_total+=sum1;
+
+            }
+        document.getElementById("final").innerHTML=final_total;
+    }
+
+    function deletedata(id){
+        var cartitem = JSON.parse(localStorage.getItem('cartdata'));
+        var pos = cartitem.findIndex((v,i)=>v.id==id);
+        console.log(pos);
+        cartitem.splice(pos,1);
+        localStorage.setItem('cartdata',JSON.stringify(cartitem));
+        viewcart();
+    }
+
+</script>

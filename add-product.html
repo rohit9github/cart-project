@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        #btn {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        #btn:hover {
+            background-color: #45a049!important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-container">
+        <h1>Add Product</h1>
+    <form onsubmit="return submitData(event)">
+
+        <label>Enter Name:</label>
+        <input type="text" id="name"></td>
+
+        <label>Enter price:</label>
+        <input type="text" id="price">
+
+        <label> oldprice:</label>
+        <input type="text" id="oldpr">
+
+        <label>Enter decscription:</label>
+        <textarea type="text" id="decs"></textarea>
+
+        <label>Enter image:</label>
+        <input type="file" id="img">
+
+        <label>Enter Stock:</label>
+        <input type="text" id="stock">
+
+        <input type="submit" id="btn" value="Submit">
+    </form>
+
+</div>
+</body>
+<script>
+
+
+
+
+    var product = [];
+
+
+    function submitData(e) {
+
+        console.log(product);
+
+        product = JSON.parse(localStorage.getItem('product')) || [];
+
+        e.preventDefault();
+
+        var name = document.querySelector("#name").value;
+        var price = document.querySelector("#price").value;
+        var oldpr = document.querySelector("#oldpr").value;
+        var decs = document.querySelector("#decs").value;
+        var imgname = document.querySelector("#img").files[0];
+        var stock = document.querySelector("#stock").value;
+        var id = Math.round(Math.random() * 100);
+
+        var pobj = {
+            name: name,
+            price: price,
+            oldpr: oldpr,
+            decs: decs,
+            imgname: imgname.name,
+            stock: stock,
+            id: id
+        }
+
+        product.push(pobj);
+
+        localStorage.setItem('product', JSON.stringify(product));
+
+
+        var name = document.querySelector("#name").value = "";
+        var price = document.querySelector("#price").value = "";
+        var oldpr = document.querySelector("#oldpr").value = "";
+        var decs = document.querySelector("#decs").value = "";
+        var imgname = document.querySelector("#img").files[0] = "";
+        var stock = document.querySelector("#stock").value = "";
+
+    }
+
+</script>
+
+</html>
